@@ -1,0 +1,4 @@
+interface:
+  display_name: "Playwright"
+  short_description: "Create reliable browser tests with Playwright"
+  default_prompt: "Use $playwright to test this user flow."

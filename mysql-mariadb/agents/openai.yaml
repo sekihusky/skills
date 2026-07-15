@@ -1,0 +1,4 @@
+interface:
+  display_name: "MySQL and MariaDB"
+  short_description: "Design and troubleshoot MySQL and MariaDB"
+  default_prompt: "Use $mysql-mariadb to solve this database task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "PostgreSQL"
+  short_description: "Design and troubleshoot PostgreSQL systems"
+  default_prompt: "Use $postgresql to solve this PostgreSQL task."

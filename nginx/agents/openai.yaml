@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nginx"
+  short_description: "Configure and troubleshoot Nginx safely"
+  default_prompt: "Use $nginx to create or review this Nginx configuration."

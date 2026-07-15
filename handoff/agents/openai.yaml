@@ -1,0 +1,4 @@
+interface:
+  display_name: "Engineering Handoff"
+  short_description: "Create concise and actionable engineering handoffs"
+  default_prompt: "Use $handoff to prepare a handoff for this work."

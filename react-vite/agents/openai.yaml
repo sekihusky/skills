@@ -1,0 +1,4 @@
+interface:
+  display_name: "React + Vite"
+  short_description: "Build and maintain React + Vite apps"
+  default_prompt: "Use $react-vite to implement this React and Vite feature."

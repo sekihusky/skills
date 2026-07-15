@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Optimizer"
+  short_description: "Prepare compact context for coding agents"
+  default_prompt: "Use $context-optimizer to prepare this task context."

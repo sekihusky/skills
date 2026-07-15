@@ -1,0 +1,4 @@
+interface:
+  display_name: "Linux Server"
+  short_description: "Operate Rocky Linux and Ubuntu servers safely"
+  default_prompt: "Use $linux-server to diagnose this Linux server task."

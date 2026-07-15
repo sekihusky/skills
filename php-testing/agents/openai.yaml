@@ -1,0 +1,4 @@
+interface:
+  display_name: "PHP Testing"
+  short_description: "Test PHP applications with PHPUnit or Pest"
+  default_prompt: "Use $php-testing to add tests for this PHP behavior."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Symfony"
+  short_description: "Build and troubleshoot Symfony applications"
+  default_prompt: "Use $symfony to implement this Symfony feature."

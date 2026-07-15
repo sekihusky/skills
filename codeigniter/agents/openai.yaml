@@ -1,0 +1,4 @@
+interface:
+  display_name: "CodeIgniter"
+  short_description: "Build and modernize CodeIgniter applications"
+  default_prompt: "Use $codeigniter to implement this CodeIgniter change."

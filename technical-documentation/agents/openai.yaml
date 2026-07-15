@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Documentation"
+  short_description: "Write accurate technical docs and runbooks"
+  default_prompt: "Use $technical-documentation to document this system."

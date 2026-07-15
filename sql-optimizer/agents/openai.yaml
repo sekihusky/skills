@@ -1,0 +1,4 @@
+interface:
+  display_name: "SQL Optimizer"
+  short_description: "Diagnose and improve SQL query performance"
+  default_prompt: "Use $sql-optimizer to optimize this query."

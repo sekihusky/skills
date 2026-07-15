@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docker"
+  short_description: "Build secure Docker images and Compose stacks"
+  default_prompt: "Use $docker to improve this container setup."

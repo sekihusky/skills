@@ -1,0 +1,4 @@
+interface:
+  display_name: "PHP"
+  short_description: "Build and modernize native PHP applications"
+  default_prompt: "Use $php to implement or review this PHP change."

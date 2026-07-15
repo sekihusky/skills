@@ -1,0 +1,4 @@
+interface:
+  display_name: "Composer"
+  short_description: "Manage PHP dependencies and autoloading"
+  default_prompt: "Use $composer to resolve this PHP dependency task."

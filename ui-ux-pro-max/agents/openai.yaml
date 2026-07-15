@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI/UX Pro Max"
+  short_description: "Generate UI design systems from local design data"
+  default_prompt: "Use $ui-ux-pro-max to design and implement a polished interface for this product."
