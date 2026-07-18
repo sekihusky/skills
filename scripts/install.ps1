@@ -36,11 +36,23 @@ function Select-Ide {
 
 function Resolve-Skills([object[]]$Available, [string[]]$Requested) {
     if (-not $Requested -or $Requested.Count -eq 0) {
-        Write-Host 'Available skills:'
-        for ($i = 0; $i -lt $Available.Count; $i++) { Write-Host "  $($i + 1). $($Available[$i].Name)" }
-        $answer = Read-Host "Enter all, skill names, or numbers (comma/space separated)"
-        if ([string]::IsNullOrWhiteSpace($answer)) { $answer = 'all' }
-        $Requested = @($answer -split '[,\s]+' | Where-Object { $_ })
+        Write-Host 'Install skills:'
+        Write-Host '  1. All skills'
+        Write-Host '  2. Select skills'
+        $mode = Read-Host 'Choice [1]'
+        if ([string]::IsNullOrWhiteSpace($mode)) { $mode = '1' }
+        switch ($mode.Trim().ToLowerInvariant()) {
+            { $_ -in @('1', 'all') } { $Requested = @('all'); break }
+            { $_ -in @('2', 'select') } {
+                Write-Host 'Available skills:'
+                for ($i = 0; $i -lt $Available.Count; $i++) { Write-Host "  $($i + 1). $($Available[$i].Name)" }
+                $answer = Read-Host 'Skill numbers or names (comma/space separated)'
+                if ([string]::IsNullOrWhiteSpace($answer)) { throw 'Select at least one skill.' }
+                $Requested = @($answer -split '[,\s]+' | Where-Object { $_ })
+                break
+            }
+            default { throw "Unknown choice: $mode" }
+        }
     }
     if ($Requested -contains '*' -or $Requested -contains 'all') { return @($Available) }
 

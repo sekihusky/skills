@@ -9,7 +9,8 @@ for skill in "$skills_root"/*; do
   count=$((count + 1)); name="$(basename "$skill")"; file="$skill/SKILL.md"
   [[ "$name" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || report "$name: invalid directory name"
   if [[ ! -f "$file" ]]; then report "$name: missing SKILL.md"; continue; fi
-  mapfile -t header < <(sed -n '1,4p' "$file" | tr -d '\r')
+  header=()
+  while IFS= read -r line; do header+=("${line%$'\r'}"); done < <(sed -n '1,4p' "$file")
   [[ "${header[0]:-}" == "---" ]] || report "$name: frontmatter must start with ---"
   [[ "${header[1]:-}" == "name: $name" ]] || report "$name: frontmatter name does not match directory"
   [[ "${header[2]:-}" == description:* && ${#header[2]} -ge 53 ]] || report "$name: description is missing or too short"

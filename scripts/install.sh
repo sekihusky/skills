@@ -6,10 +6,13 @@ ide="${1:-}"; [[ $# -gt 0 ]] && shift || true
 requested=("$@")
 assume_yes="false"
 filtered=()
-for value in "${requested[@]}"; do
-  if [[ "$value" == "-y" || "$value" == "--yes" ]]; then assume_yes="true"; else filtered+=("$value"); fi
-done
-requested=("${filtered[@]}")
+if [[ ${#requested[@]} -gt 0 ]]; then
+  for value in "${requested[@]}"; do
+    if [[ "$value" == "-y" || "$value" == "--yes" ]]; then assume_yes="true"; else filtered+=("$value"); fi
+  done
+fi
+requested=()
+if [[ ${#filtered[@]} -gt 0 ]]; then requested=("${filtered[@]}"); fi
 
 ide_keys=(antigravity codex cursor gemini-cli github-copilot claude-code kiro windsurf custom)
 ide_labels=("Antigravity" "Codex" "Cursor" "Gemini CLI" "GitHub Copilot" "Claude Code" "Kiro" "Windsurf" "Custom path")
@@ -38,7 +41,6 @@ if [[ "$ide" == "custom" ]]; then
   [[ -n "$relative_path" && "$relative_path" != /* ]] || { echo "Custom path must be non-empty and relative." >&2; exit 2; }
   case "/$relative_path/" in */../*) echo "Custom path cannot contain '..'." >&2; exit 2 ;; esac
 fi
-[[ ${#selected[@]} -gt 0 ]] || { echo "Select at least one skill." >&2; exit 2; }
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"; repo_root="$(dirname "$script_dir")"
 available=()
@@ -46,14 +48,30 @@ for candidate in "$repo_root"/*; do [[ -d "$candidate" && -f "$candidate/SKILL.m
 IFS=$'\n' available=($(printf '%s\n' "${available[@]}" | sort)); unset IFS
 
 if [[ ${#requested[@]} -eq 0 ]]; then
-  echo "Available skills:"
-  for i in "${!available[@]}"; do echo "  $((i + 1)). ${available[$i]}"; done
-  read -r -p "Enter all, skill names, or numbers (comma/space separated): " answer
-  answer="${answer:-all}"; IFS=', ' read -r -a requested <<< "$answer"
+  echo "Install skills:"
+  echo "  1. All skills"
+  echo "  2. Select skills"
+  read -r -p "Choice [1]: " install_mode
+  install_mode="${install_mode:-1}"
+  case "$install_mode" in
+    1|all) requested=(all) ;;
+    2|select)
+      echo "Available skills:"
+      for i in "${!available[@]}"; do echo "  $((i + 1)). ${available[$i]}"; done
+      read -r -p "Skill numbers or names (comma/space separated): " answer
+      [[ -n "$answer" ]] || { echo "Select at least one skill." >&2; exit 2; }
+      IFS=', ' read -r -a requested <<< "$answer"
+      ;;
+    *) echo "Unknown choice: $install_mode" >&2; exit 2 ;;
+  esac
 fi
 
 selected=()
-if [[ " ${requested[*]} " == *" all "* || " ${requested[*]} " == *" * "* ]]; then
+select_all="false"
+for item in "${requested[@]}"; do
+  [[ "$item" == "all" || "$item" == "*" ]] && select_all="true"
+done
+if [[ "$select_all" == "true" ]]; then
   selected=("${available[@]}")
 else
   for item in "${requested[@]}"; do
@@ -61,9 +79,14 @@ else
     if [[ "$item" =~ ^[0-9]+$ && "$item" -ge 1 && "$item" -le ${#available[@]} ]]; then item="${available[$((item - 1))]}"; fi
     found="false"; for name in "${available[@]}"; do [[ "$name" == "$item" ]] && found="true" && break; done
     [[ "$found" == "true" ]] || { echo "Unknown skill: $item" >&2; exit 2; }
-    [[ " ${selected[*]} " == *" $item "* ]] || selected+=("$item")
+    already_selected="false"
+    if [[ ${#selected[@]} -gt 0 ]]; then
+      for name in "${selected[@]}"; do [[ "$name" == "$item" ]] && already_selected="true" && break; done
+    fi
+    [[ "$already_selected" == "true" ]] || selected+=("$item")
   done
 fi
+[[ ${#selected[@]} -gt 0 ]] || { echo "Select at least one skill." >&2; exit 2; }
 
 destination_root="$project_root/$relative_path"
 echo; echo "IDE:         ${ide_labels[$ide_index]}"; echo "Project:     $project_root"; echo "Destination: $destination_root"; echo "Skills:      ${selected[*]}"
